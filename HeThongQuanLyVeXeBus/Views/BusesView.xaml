@@ -1,0 +1,76 @@
+<UserControl x:Class="HeThongQuanLyVeXeBus.Views.BusesView"
+             xmlns="http://schemas.microsoft.com/winfx/2006/xaml/presentation"
+             xmlns:x="http://schemas.microsoft.com/winfx/2006/xaml"
+             xmlns:d="http://schemas.microsoft.com/expression/blend/2008"
+             xmlns:mc="http://schemas.openxmlformats.org/markup-compatibility/2006"
+             xmlns:vm="clr-namespace:HeThongQuanLyVeXeBus.ViewModels"
+             xmlns:b="clr-namespace:HeThongQuanLyVeXeBus.Views.Behaviors"
+             mc:Ignorable="d" d:DesignWidth="1000" d:DesignHeight="640"
+             d:DataContext="{d:DesignInstance Type=vm:BusesViewModel}"
+             Language="vi-VN">
+    <UserControl.Resources>
+        <ResourceDictionary Source="/HeThongQuanLyVeXeBus;component/Resources/Styles.xaml"/>
+    </UserControl.Resources>
+
+    <Grid>
+        <Grid.RowDefinitions>
+            <RowDefinition Height="Auto"/>
+            <RowDefinition Height="*"/>
+        </Grid.RowDefinitions>
+        <Grid.ColumnDefinitions>
+            <ColumnDefinition Width="300"/>
+            <ColumnDefinition Width="*"/>
+        </Grid.ColumnDefinitions>
+
+        <TextBlock Grid.ColumnSpan="2" Text="Đội xe" Style="{StaticResource PageTitle}"/>
+
+        <!-- Biểu mẫu: chọn một dòng trong bảng để sửa, hoặc bấm "Thêm mới". -->
+        <Border Grid.Row="1" Style="{StaticResource PanelCard}" Margin="0,0,16,0">
+            <ScrollViewer VerticalScrollBarVisibility="Auto">
+                <StackPanel>
+                    <TextBlock Text="Biển số *"/>
+                    <TextBox Text="{Binding PlateNumber, UpdateSourceTrigger=PropertyChanged}" MaxLength="50"
+                             b:FocusBehavior.Key="PlateNumber"/>
+                    <TextBlock Text="Dòng xe *"/>
+                    <TextBox Text="{Binding BusModel, UpdateSourceTrigger=PropertyChanged}" b:FocusBehavior.Key="BusModel"/>
+                    <TextBlock Text="Loại xe *"/>
+                    <TextBox Text="{Binding BusTypeName, UpdateSourceTrigger=PropertyChanged}" b:FocusBehavior.Key="BusTypeName"/>
+                    <Grid>
+                        <Grid.ColumnDefinitions>
+                            <ColumnDefinition/>
+                            <ColumnDefinition Width="12"/>
+                            <ColumnDefinition/>
+                        </Grid.ColumnDefinitions>
+                        <StackPanel>
+                            <TextBlock Text="Số chỗ *"/>
+                            <TextBox Text="{Binding CapacityText, UpdateSourceTrigger=PropertyChanged}"
+                                     b:FocusBehavior.Key="CapacityText"/>
+                        </StackPanel>
+                        <StackPanel Grid.Column="2">
+                            <TextBlock Text="Số tầng *"/>
+                            <ComboBox ItemsSource="{Binding FloorOptions}" SelectedItem="{Binding NumberOfFloors}"/>
+                        </StackPanel>
+                    </Grid>
+                    <CheckBox Content="Có Wi-Fi" IsChecked="{Binding HasWifi}"/>
+                    <CheckBox Content="Có điều hòa" IsChecked="{Binding HasAirConditioner}"/>
+                    <CheckBox Content="Đang hoạt động" IsChecked="{Binding IsActive}"/>
+                    <WrapPanel>
+                        <Button Content="Lưu xe" Command="{Binding SaveCommand}" Style="{StaticResource PrimaryButton}"/>
+                        <Button Content="Thêm mới" Command="{Binding NewCommand}"/>
+                    </WrapPanel>
+                </StackPanel>
+            </ScrollViewer>
+        </Border>
+
+        <DataGrid Grid.Row="1" Grid.Column="1" ItemsSource="{Binding Buses}" SelectedItem="{Binding SelectedBus}">
+            <DataGrid.Columns>
+                <DataGridTextColumn Header="Biển số" Binding="{Binding PlateNumber}" Width="110"/>
+                <DataGridTextColumn Header="Dòng xe" Binding="{Binding BusModel}" Width="*"/>
+                <DataGridTextColumn Header="Loại xe" Binding="{Binding BusTypeName}" Width="*"/>
+                <DataGridTextColumn Header="Chỗ" Binding="{Binding TotalSeats}" Width="60"/>
+                <DataGridTextColumn Header="Tầng" Binding="{Binding NumberOfFloors}" Width="60"/>
+                <DataGridCheckBoxColumn Header="Hoạt động" Binding="{Binding IsActive}" Width="105"/>
+            </DataGrid.Columns>
+        </DataGrid>
+    </Grid>
+</UserControl>

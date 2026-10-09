@@ -1,0 +1,98 @@
+<UserControl x:Class="HeThongQuanLyVeXeBus.Views.TripsView"
+             xmlns="http://schemas.microsoft.com/winfx/2006/xaml/presentation"
+             xmlns:x="http://schemas.microsoft.com/winfx/2006/xaml"
+             xmlns:d="http://schemas.microsoft.com/expression/blend/2008"
+             xmlns:mc="http://schemas.openxmlformats.org/markup-compatibility/2006"
+             xmlns:vm="clr-namespace:HeThongQuanLyVeXeBus.ViewModels"
+             xmlns:b="clr-namespace:HeThongQuanLyVeXeBus.Views.Behaviors"
+             mc:Ignorable="d" d:DesignWidth="1000" d:DesignHeight="640"
+             d:DataContext="{d:DesignInstance Type=vm:TripsViewModel}"
+             Language="vi-VN">
+    <UserControl.Resources>
+        <ResourceDictionary Source="/HeThongQuanLyVeXeBus;component/Resources/Styles.xaml"/>
+    </UserControl.Resources>
+
+    <Grid>
+        <Grid.RowDefinitions>
+            <RowDefinition Height="Auto"/>
+            <RowDefinition Height="*"/>
+        </Grid.RowDefinitions>
+        <Grid.ColumnDefinitions>
+            <ColumnDefinition Width="300"/>
+            <ColumnDefinition Width="*"/>
+        </Grid.ColumnDefinitions>
+
+        <TextBlock Grid.ColumnSpan="2" Text="Chuyến xe" Style="{StaticResource PageTitle}"/>
+
+        <!-- Biểu mẫu: chọn một dòng trong bảng để sửa, hoặc bấm "Thêm mới". -->
+        <Border Grid.Row="1" Style="{StaticResource PanelCard}" Margin="0,0,16,0">
+            <ScrollViewer VerticalScrollBarVisibility="Auto">
+                <StackPanel>
+                    <TextBlock Text="Tuyến xe *"/>
+                    <ComboBox ItemsSource="{Binding Routes}" SelectedItem="{Binding TripRoute}"
+                              DisplayMemberPath="RouteName" b:FocusBehavior.Key="TripRoute"/>
+                    <TextBlock Text="Xe *"/>
+                    <ComboBox ItemsSource="{Binding Buses}" SelectedItem="{Binding TripBus}"/>
+                    <TextBlock Text="Khởi hành (ngày, giờ HH:mm) *"/>
+                    <Grid>
+                        <Grid.ColumnDefinitions>
+                            <ColumnDefinition/>
+                            <ColumnDefinition Width="80"/>
+                        </Grid.ColumnDefinitions>
+                        <DatePicker SelectedDate="{Binding DepartureDate}" Margin="0,0,8,10"/>
+                        <TextBox Grid.Column="1" Text="{Binding DepartureTimeText, UpdateSourceTrigger=PropertyChanged}"/>
+                    </Grid>
+                    <TextBlock Text="Dự kiến đến (ngày, giờ HH:mm) *"/>
+                    <Grid>
+                        <Grid.ColumnDefinitions>
+                            <ColumnDefinition/>
+                            <ColumnDefinition Width="80"/>
+                        </Grid.ColumnDefinitions>
+                        <DatePicker SelectedDate="{Binding ArrivalDate}" Margin="0,0,8,10"/>
+                        <TextBox Grid.Column="1" Text="{Binding ArrivalTimeText, UpdateSourceTrigger=PropertyChanged}"/>
+                    </Grid>
+                    <TextBlock Text="Tài xế *"/>
+                    <TextBox Text="{Binding DriverName, UpdateSourceTrigger=PropertyChanged}" b:FocusBehavior.Key="DriverName"/>
+                    <TextBlock Text="SĐT tài xế *"/>
+                    <TextBox Text="{Binding DriverPhone, UpdateSourceTrigger=PropertyChanged}" b:FocusBehavior.Key="DriverPhone"/>
+                    <TextBlock Text="Giá vé (VNĐ) *"/>
+                    <TextBox Text="{Binding TicketPriceText, UpdateSourceTrigger=PropertyChanged}" b:FocusBehavior.Key="TicketPriceText"/>
+                    <WrapPanel>
+                        <Button Content="Lưu chuyến" Command="{Binding SaveCommand}" Style="{StaticResource PrimaryButton}"/>
+                        <Button Content="Thêm mới" Command="{Binding NewCommand}"/>
+                    </WrapPanel>
+                </StackPanel>
+            </ScrollViewer>
+        </Border>
+
+        <DockPanel Grid.Row="1" Grid.Column="1">
+            <!-- Lọc danh sách -->
+            <WrapPanel DockPanel.Dock="Top" Margin="0,0,0,10">
+                <TextBlock Text="Ngày đi:" Margin="0,0,8,0"/>
+                <DatePicker SelectedDate="{Binding FilterDate}" Width="140" Margin="0,0,12,0"/>
+                <TextBlock Text="Trạng thái:" Margin="0,0,8,0"/>
+                <ComboBox ItemsSource="{Binding FilterChoices}" SelectedItem="{Binding FilterStatus}"
+                          DisplayMemberPath="Label" Width="150" Margin="0,0,8,0"/>
+                <Button Content="Bỏ lọc" Command="{Binding ClearFilterCommand}" Margin="0"/>
+            </WrapPanel>
+            <!-- Đổi trạng thái chuyến đang chọn -->
+            <WrapPanel DockPanel.Dock="Bottom" Margin="0,10,0,0">
+                <TextBlock Text="Đổi trạng thái chuyến đang chọn:" Margin="0,0,8,0"/>
+                <ComboBox ItemsSource="{Binding StatusChoices}" SelectedItem="{Binding NewStatus}"
+                          DisplayMemberPath="Label" Width="160" Margin="0,0,8,0"/>
+                <Button Content="Lưu trạng thái" Command="{Binding ChangeStatusCommand}"
+                        Style="{StaticResource PrimaryButton}" Margin="0"/>
+            </WrapPanel>
+            <DataGrid ItemsSource="{Binding TripRows}" SelectedItem="{Binding SelectedTripRow}">
+                <DataGrid.Columns>
+                    <DataGridTextColumn Header="Mã chuyến" Binding="{Binding Trip.TripCode}" Width="135"/>
+                    <DataGridTextColumn Header="Tuyến" Binding="{Binding Trip.Route.RouteName}" Width="*"/>
+                    <DataGridTextColumn Header="Xe" Binding="{Binding Trip.Bus.PlateNumber}" Width="95"/>
+                    <DataGridTextColumn Header="Khởi hành" Binding="{Binding Trip.DepartureTime, StringFormat={}{0:dd/MM/yyyy HH:mm}}" Width="140"/>
+                    <DataGridTextColumn Header="Giá vé" Binding="{Binding Trip.TicketPrice, StringFormat={}{0:N0}}" Width="80"/>
+                    <DataGridTextColumn Header="Trạng thái" Binding="{Binding StatusText}" Width="115"/>
+                </DataGrid.Columns>
+            </DataGrid>
+        </DockPanel>
+    </Grid>
+</UserControl>

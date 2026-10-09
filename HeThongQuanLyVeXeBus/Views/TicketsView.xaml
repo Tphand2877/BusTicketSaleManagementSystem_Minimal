@@ -1,0 +1,53 @@
+<UserControl x:Class="HeThongQuanLyVeXeBus.Views.TicketsView"
+             xmlns="http://schemas.microsoft.com/winfx/2006/xaml/presentation"
+             xmlns:x="http://schemas.microsoft.com/winfx/2006/xaml"
+             xmlns:d="http://schemas.microsoft.com/expression/blend/2008"
+             xmlns:mc="http://schemas.openxmlformats.org/markup-compatibility/2006"
+             xmlns:vm="clr-namespace:HeThongQuanLyVeXeBus.ViewModels"
+             mc:Ignorable="d" d:DesignWidth="1000" d:DesignHeight="640"
+             d:DataContext="{d:DesignInstance Type=vm:TicketsViewModel}"
+             Language="vi-VN">
+    <UserControl.Resources>
+        <ResourceDictionary Source="/HeThongQuanLyVeXeBus;component/Resources/Styles.xaml"/>
+    </UserControl.Resources>
+
+    <DockPanel>
+        <TextBlock DockPanel.Dock="Top" Text="Vé / soát vé" Style="{StaticResource PageTitle}"/>
+
+        <!-- Tìm kiếm -->
+        <DockPanel DockPanel.Dock="Top" Margin="0,0,0,10">
+            <Button DockPanel.Dock="Right" Content="Xuất Excel" Command="{Binding ExportExcelCommand}"
+                    ToolTip="Xuất danh sách vé đang hiển thị" Margin="0"/>
+            <Button DockPanel.Dock="Right" Content="Làm mới" Command="{Binding RefreshCommand}" Margin="0,0,8,0"/>
+            <TextBlock Text="Tìm vé:" Margin="0,0,8,0"/>
+            <TextBox Text="{Binding SearchText, UpdateSourceTrigger=PropertyChanged}" Width="360"
+                     HorizontalAlignment="Left" Margin="0"
+                     ToolTip="Nhập mã vé, tên khách, số điện thoại hoặc mã chuyến"/>
+        </DockPanel>
+
+        <!-- Vé đang chọn và các thao tác -->
+        <Border DockPanel.Dock="Bottom" Style="{StaticResource PanelCard}" Padding="14,10" Margin="0,10,0,0">
+            <StackPanel>
+                <TextBlock Text="{Binding TicketDetail}" TextWrapping="Wrap"/>
+                <WrapPanel>
+                    <Button Content="Quét QR bằng camera" Command="{Binding ScanQrCommand}"/>
+                    <Button Content="Soát vé / lên xe" Command="{Binding CheckInCommand}" Style="{StaticResource PrimaryButton}"/>
+                    <Button Content="Hủy vé" Command="{Binding CancelTicketCommand}" Style="{StaticResource DangerButton}"/>
+                    <Button Content="Xác nhận đã hoàn tiền" Command="{Binding MarkRefundedCommand}"/>
+                </WrapPanel>
+            </StackPanel>
+        </Border>
+
+        <DataGrid ItemsSource="{Binding VisibleTickets}" SelectedItem="{Binding SelectedTicket}">
+            <DataGrid.Columns>
+                <DataGridTextColumn Header="Mã vé" Binding="{Binding TicketCode}" Width="170"/>
+                <DataGridTextColumn Header="Chuyến" Binding="{Binding Trip.TripCode}" Width="135"/>
+                <DataGridTextColumn Header="Khách hàng" Binding="{Binding CustomerName}" Width="*"/>
+                <DataGridTextColumn Header="SĐT" Binding="{Binding CustomerPhone}" Width="110"/>
+                <DataGridTextColumn Header="Giá vé" Binding="{Binding Price, StringFormat={}{0:N0}}" Width="85"/>
+                <DataGridTextColumn Header="Trạng thái" Binding="{Binding StatusText}" Width="210"/>
+                <DataGridTextColumn Header="Ngày hoàn tiền" Binding="{Binding RefundedAt, StringFormat={}{0:dd/MM/yyyy HH:mm}}" Width="135"/>
+            </DataGrid.Columns>
+        </DataGrid>
+    </DockPanel>
+</UserControl>

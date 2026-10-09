@@ -1,0 +1,83 @@
+<UserControl x:Class="HeThongQuanLyVeXeBus.Views.RoutesView"
+             xmlns="http://schemas.microsoft.com/winfx/2006/xaml/presentation"
+             xmlns:x="http://schemas.microsoft.com/winfx/2006/xaml"
+             xmlns:d="http://schemas.microsoft.com/expression/blend/2008"
+             xmlns:mc="http://schemas.openxmlformats.org/markup-compatibility/2006"
+             xmlns:vm="clr-namespace:HeThongQuanLyVeXeBus.ViewModels"
+             xmlns:b="clr-namespace:HeThongQuanLyVeXeBus.Views.Behaviors"
+             mc:Ignorable="d" d:DesignWidth="1000" d:DesignHeight="640"
+             d:DataContext="{d:DesignInstance Type=vm:RoutesViewModel}"
+             Language="vi-VN">
+    <UserControl.Resources>
+        <ResourceDictionary Source="/HeThongQuanLyVeXeBus;component/Resources/Styles.xaml"/>
+    </UserControl.Resources>
+
+    <Grid>
+        <Grid.RowDefinitions>
+            <RowDefinition Height="Auto"/>
+            <RowDefinition Height="*"/>
+        </Grid.RowDefinitions>
+        <Grid.ColumnDefinitions>
+            <ColumnDefinition Width="300"/>
+            <ColumnDefinition Width="*"/>
+        </Grid.ColumnDefinitions>
+
+        <TextBlock Grid.ColumnSpan="2" Text="Tuyến xe" Style="{StaticResource PageTitle}"/>
+
+        <!-- Biểu mẫu: chọn một dòng trong bảng để sửa, hoặc bấm "Thêm mới". -->
+        <Border Grid.Row="1" Style="{StaticResource PanelCard}" Margin="0,0,16,0">
+            <ScrollViewer VerticalScrollBarVisibility="Auto">
+                <StackPanel>
+                    <TextBlock Text="Mã tuyến *"/>
+                    <TextBox Text="{Binding RouteCode, UpdateSourceTrigger=PropertyChanged}" MaxLength="50"
+                             b:FocusBehavior.Key="RouteCode"/>
+                    <TextBlock Text="Tên tuyến *"/>
+                    <TextBox Text="{Binding RouteName, UpdateSourceTrigger=PropertyChanged}" MaxLength="200"
+                             b:FocusBehavior.Key="RouteName"/>
+                    <TextBlock Text="Điểm đi *"/>
+                    <TextBox Text="{Binding Origin, UpdateSourceTrigger=PropertyChanged}" b:FocusBehavior.Key="Origin"/>
+                    <TextBlock Text="Điểm dừng"/>
+                    <TextBox Text="{Binding StopPoint, UpdateSourceTrigger=PropertyChanged}" b:FocusBehavior.Key="StopPoint"/>
+                    <TextBlock Text="Điểm đến *"/>
+                    <TextBox Text="{Binding Destination, UpdateSourceTrigger=PropertyChanged}" b:FocusBehavior.Key="Destination"/>
+                    <Grid>
+                        <Grid.ColumnDefinitions>
+                            <ColumnDefinition/>
+                            <ColumnDefinition Width="12"/>
+                            <ColumnDefinition/>
+                        </Grid.ColumnDefinitions>
+                        <StackPanel>
+                            <TextBlock Text="Số km *"/>
+                            <TextBox Text="{Binding DistanceKmText, UpdateSourceTrigger=PropertyChanged}"
+                                     b:FocusBehavior.Key="DistanceKmText"/>
+                        </StackPanel>
+                        <StackPanel Grid.Column="2">
+                            <TextBlock Text="Thời gian (giờ) *"/>
+                            <TextBox Text="{Binding EstimatedHoursText, UpdateSourceTrigger=PropertyChanged}"
+                                     b:FocusBehavior.Key="EstimatedHoursText"/>
+                        </StackPanel>
+                    </Grid>
+                    <TextBlock Text="Giá vé cơ bản (VNĐ) *"/>
+                    <TextBox Text="{Binding BasePriceText, UpdateSourceTrigger=PropertyChanged}" b:FocusBehavior.Key="BasePriceText"/>
+                    <CheckBox Content="Đang hoạt động" IsChecked="{Binding IsActive}"/>
+                    <WrapPanel>
+                        <Button Content="Lưu tuyến" Command="{Binding SaveCommand}" Style="{StaticResource PrimaryButton}"/>
+                        <Button Content="Thêm mới" Command="{Binding NewCommand}"/>
+                    </WrapPanel>
+                </StackPanel>
+            </ScrollViewer>
+        </Border>
+
+        <DataGrid Grid.Row="1" Grid.Column="1" ItemsSource="{Binding Routes}" SelectedItem="{Binding SelectedRoute}">
+            <DataGrid.Columns>
+                <DataGridTextColumn Header="Mã" Binding="{Binding RouteCode}" Width="80"/>
+                <DataGridTextColumn Header="Tên tuyến" Binding="{Binding RouteName}" Width="*"/>
+                <DataGridTextColumn Header="Điểm dừng" Binding="{Binding StopPoint}" Width="150"/>
+                <DataGridTextColumn Header="Km" Binding="{Binding DistanceKm}" Width="60"/>
+                <DataGridTextColumn Header="Giờ" Binding="{Binding EstimatedHours}" Width="60"/>
+                <DataGridTextColumn Header="Giá vé" Binding="{Binding BasePrice, StringFormat={}{0:N0}}" Width="100"/>
+                <DataGridCheckBoxColumn Header="Hoạt động" Binding="{Binding IsActive}" Width="105"/>
+            </DataGrid.Columns>
+        </DataGrid>
+    </Grid>
+</UserControl>
