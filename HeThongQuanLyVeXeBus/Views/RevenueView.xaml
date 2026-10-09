@@ -29,8 +29,6 @@
                 <ComboBox ItemsSource="{Binding RouteChoices}" SelectedItem="{Binding SelectedRouteChoice}"
                           DisplayMemberPath="Label" Width="200" Margin="0"/>
             </StackPanel>
-            <Button Content="Xem báo cáo" Command="{Binding ApplyCommand}" Style="{StaticResource PrimaryButton}"
-                    VerticalAlignment="Bottom" Margin="0,0,8,0"/>
             <Button Content="Xuất Excel" Command="{Binding ExportExcelCommand}" VerticalAlignment="Bottom" Margin="0"/>
         </WrapPanel>
 
